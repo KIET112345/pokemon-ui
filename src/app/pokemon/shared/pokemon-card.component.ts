@@ -5,7 +5,7 @@ import { Pokemon } from '../../core/pokemon.service';
   selector: 'app-pokemon-card',
   template: `
   <mat-card class="pokemon-card">
-    <img [src]="pokemon?.image || 'assets/pokemon/placeholder.png'" [alt]="pokemon?.name" (error)="onImgError($event)"/>
+    <img [src]="pokemon?.imageUrl || 'assets/pokemon/placeholder.png'" [alt]="pokemon?.name" (error)="onImgError($event)"/>
     <h3>{{ pokemon?.name }}</h3>
     <div>
       <button mat-icon-button color="warn" (click)="favorite.emit(pokemon?.id)">

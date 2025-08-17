@@ -8,7 +8,7 @@ import { PokemonService, Pokemon } from '../../core/pokemon.service';
   <h2 mat-dialog-title>Pokémon Details</h2>
   <mat-dialog-content *ngIf="pokemon">
     <div class="flex gap-4">
-      <img [src]="pokemon.image || 'assets/pokemon/placeholder.png'" alt="{{pokemon.name}}" width="160" (error)="onErr($event)">
+      <img [src]="pokemon.imageUrl || 'assets/pokemon/placeholder.png'" alt="{{pokemon.name}}" width="160" (error)="onErr($event)">
       <div>
         <h3>{{ pokemon.name }}</h3>
         <p>Type: {{ pokemon.type1 }} <ng-container *ngIf="pokemon.type2">/ {{ pokemon.type2 }}</ng-container></p>

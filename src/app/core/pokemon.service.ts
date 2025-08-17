@@ -10,7 +10,7 @@ export interface Pokemon {
   type2?: string;
   speed?: number;
   legendary?: boolean;
-  image?: string;
+  imageUrl?: string;
 }
 
 export interface PokemonQuery {
@@ -24,10 +24,10 @@ export interface PokemonQuery {
 }
 
 export interface PaginatedPokemon {
-  data: Pokemon[];
+  items: Pokemon[];
   total: number;
   page: number;
-  limit: number;
+  pageSize: number;
 }
 
 @Injectable({ providedIn: 'root' })
