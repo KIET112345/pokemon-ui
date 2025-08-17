@@ -8,10 +8,10 @@
 </div>
 
 <h2 class="mt-6">Featured Pokémon</h2>
-<!-- <div class="card-grid">
-  <mat-card *ngFor="let p of featured" class="pokemon-card">
-    <img [src]="p.image" alt="{{p.name}}" onerror="this.src='assets/pokemon/placeholder.png'"/>
+<div class="card-grid">
+  <mat-card *ngFor="let p of pokemons$  | async" class="pokemon-card">
+    <img [src]="p.imageUrl" alt="{{p.name}}" onerror="this.src='assets/pokemon/placeholder.png'"/>
     <h3>{{ p.name }}</h3>
     <button mat-stroked-button color="primary" [routerLink]="['/pokemon']">See More</button>
   </mat-card>
-</div> -->
+</div>

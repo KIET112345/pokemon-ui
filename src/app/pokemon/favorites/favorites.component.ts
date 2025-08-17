@@ -1,21 +1,35 @@
-import { Component, OnInit } from '@angular/core';
-import { Pokemon, PokemonService } from '../../core/pokemon.service';
+import { Component, OnInit } from "@angular/core";
+import { Store } from "@ngrx/store";
+import { selectFavorites } from "../state/pokemon.selectors";
+import * as PokemonActions from "../state/pokemon.actions";
 
 @Component({
-  selector: 'app-favorites',
+  selector: "app-favorites",
   template: `
-  <h2>Your Favorites</h2>
-  <div class="card-grid">
-    <mat-card *ngFor="let p of data" class="pokemon-card">
-      <img [src]="p.image || 'assets/pokemon/placeholder.png'" (error)="onErr($event)">
-      <h3>{{ p.name }}</h3>
-    </mat-card>
-  </div>
-  `
+    <h2>Your Favorites</h2>
+    <div class="card-grid">
+      <mat-card *ngFor="let p of favorites$ | async" class="pokemon-card">
+        <img
+          [src]="p.pokemon.imageUrl || 'assets/pokemon/placeholder.png'"
+          (error)="onErr($event)"
+        />
+        <h3>{{ p.pokemon.name }}</h3>
+      </mat-card>
+    </div>
+  `,
 })
 export class FavoritesComponent implements OnInit {
-  data: Pokemon[] = [];
-  constructor(private api: PokemonService) {}
-  ngOnInit(){ this.api.favorites().subscribe(d => this.data = d); }
-  onErr(e:any){ e.target.src='assets/pokemon/placeholder.png'; }
+  favorites$ = this.store.select(selectFavorites);
+  
+
+  constructor(private store: Store) {}
+
+  ngOnInit() {
+    this.store.dispatch(PokemonActions.loadFavorites());
+    console.log('favorites$', this.favorites$)
+  }
+
+  onErr(e: any) {
+    e.target.src = "assets/pokemon/placeholder.png";
+  }
 }

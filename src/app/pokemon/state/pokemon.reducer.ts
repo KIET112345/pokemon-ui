@@ -13,6 +13,7 @@ export interface PokemonState {
   legendary: boolean | null;
   speedMin: number | null;
   speedMax: number | null;
+  favorites: Pokemon[];
 }
 
 export const initialState: PokemonState = {
@@ -26,19 +27,24 @@ export const initialState: PokemonState = {
   legendary: null,
   speedMin: null,
   speedMax: null,
+  favorites: [],
 };
 
 export const pokemonReducer = createReducer(
   initialState,
   on(Actions.setSearch, (s, { name }) => ({ ...s, name, page: 0 })),
-  on(Actions.setFilters, (s, { type, legendary, speedMin, speedMax }) => ({
-    ...s,
-    type,
-    legendary,
-    speedMin,
-    speedMax,
-    page: 0,
-  })),
+  on(
+    Actions.setFilters,
+    (s, { pokemonType, legendary, speedMin, speedMax }) => ({
+      ...s,
+      type: pokemonType,
+      legendary,
+      speedMin,
+      speedMax,
+      page: 0,
+    })
+  ),
+
   on(Actions.changePage, (s, { pageIndex, pageSize }) => ({
     ...s,
     page: pageIndex,
@@ -53,5 +59,9 @@ export const pokemonReducer = createReducer(
     page: payload.page,
     pageSize: payload.pageSize,
   })),
-  on(Actions.loadFailure, (s) => ({ ...s, loading: false }))
+  on(Actions.loadFailure, (s) => ({ ...s, loading: false })),
+  on(Actions.loadFavoritesSuccess, (s, { favorites }) => ({
+    ...s,
+    favorites,
+  }))
 );

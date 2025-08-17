@@ -1,20 +1,27 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from "@angular/core";
+import { Store } from "@ngrx/store";
+import { selectPokemons } from "../pokemon/state/pokemon.selectors";
+import * as PokemonActions from "../pokemon/state/pokemon.actions";
+import { map } from "rxjs";
 
 @Component({
-  selector: 'app-home',
-  templateUrl: './home.component.html'
+  selector: "app-home",
+  templateUrl: "./home.component.html",
 })
-export class HomeComponent {
+export class HomeComponent implements OnInit {
   trailers = [
-    'https://www.youtube.com/embed/uBYORdr_TY8',
-    'https://www.youtube.com/embed/bILE5BEyhdo',
-    'https://www.youtube.com/embed/EMJ2V9W4V_A',
-    'https://www.youtube.com/embed/bvSe6pMvUj8'
+    "https://www.youtube.com/embed/uBYORdr_TY8",
+    "https://www.youtube.com/embed/bILE5BEyhdo",
+    "https://www.youtube.com/embed/EMJ2V9W4V_A",
+    "https://www.youtube.com/embed/bvSe6pMvUj8",
   ];
+  pokemons$ = this.store
+    .select(selectPokemons)
+    .pipe(map((pokemons) => pokemons.slice(0, 10)));
 
-  // featured = Array.from({ length: 10 }).map((_, i) => ({
-  //   id: i + 1,
-  //   name: `Pokemon ${i + 1}`,
-  //   image: `assets/pokemon/${i + 1}.png`
-  // }));
+  constructor(private store: Store) {}
+
+  ngOnInit() {
+    this.store.dispatch(PokemonActions.initFromUrl());
+  }
 }

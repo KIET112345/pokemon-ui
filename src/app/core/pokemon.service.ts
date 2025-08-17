@@ -1,7 +1,7 @@
-import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
-import { environment } from '../../environments/environment';
-import { Observable } from 'rxjs';
+import { Injectable } from "@angular/core";
+import { HttpClient, HttpParams } from "@angular/common/http";
+import { environment } from "../../environments/environment";
+import { catchError, Observable, of } from "rxjs";
 
 export interface Pokemon {
   id: number;
@@ -30,20 +30,23 @@ export interface PaginatedPokemon {
   pageSize: number;
 }
 
-@Injectable({ providedIn: 'root' })
+@Injectable({ providedIn: "root" })
 export class PokemonService {
   private readonly base = `${environment.apiUrl}/pokemon`;
   constructor(private http: HttpClient) {}
 
   list(query: PokemonQuery): Observable<PaginatedPokemon> {
     let params = new HttpParams()
-      .set('page', query.page)
-      .set('limit', query.limit);
-    if (query.name) params = params.set('name', query.name);
-    if (query.type) params = params.set('type', query.type);
-    if (query.legendary != null) params = params.set('legendary', String(query.legendary));
-    if (query.speedMin != null) params = params.set('speedMin', String(query.speedMin));
-    if (query.speedMax != null) params = params.set('speedMax', String(query.speedMax));
+      .set("page", query.page)
+      .set("limit", query.limit);
+    if (query.name) params = params.set("name", query.name);
+    if (query.type) params = params.set("type", query.type);
+    if (query.legendary != null)
+      params = params.set("legendary", String(query.legendary));
+    if (query.speedMin != null)
+      params = params.set("speedMin", String(query.speedMin));
+    if (query.speedMax != null)
+      params = params.set("speedMax", String(query.speedMax));
     return this.http.get<PaginatedPokemon>(this.base, { params });
   }
 
@@ -52,16 +55,25 @@ export class PokemonService {
   }
 
   toggleFavorite(id: number): Observable<{ favorite: boolean }> {
-    return this.http.post<{ favorite: boolean }>(`${this.base}/${id}/favorite`, {});
+    return this.http
+      .post<{ favorite: boolean }>(`${environment.apiUrl}/favorites/${id}`, {})
+      .pipe(
+        catchError((err) => {
+          if (err.status === 409) {
+            return of({ favorite: true });
+          }
+          throw err;
+        })
+      );
   }
 
   favorites(): Observable<Pokemon[]> {
-    return this.http.get<Pokemon[]>(`${this.base}/favorites`);
+    return this.http.get<Pokemon[]>(`${environment.apiUrl}/favorites`);
   }
 
   importCsv(file: File): Observable<any> {
     const formData = new FormData();
-    formData.append('file', file);
+    formData.append("file", file);
     return this.http.post(`${this.base}/import`, formData);
   }
 }

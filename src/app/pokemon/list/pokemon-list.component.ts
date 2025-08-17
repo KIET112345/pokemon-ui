@@ -36,11 +36,17 @@ export class PokemonListComponent implements OnInit, OnDestroy {
   constructor(private fb: FormBuilder, private dialog: MatDialog, private snack: MatSnackBar, private store: Store) {}
 
   ngOnInit() {
-    this.store.dispatch(PokemonActions.initFromUrl());
-    this.searchCtrl.valueChanges.pipe(debounceTime(300), takeUntil(this.destroy$)).subscribe(value => {
+  this.store.dispatch(PokemonActions.initFromUrl());
+
+  this.searchCtrl.valueChanges
+    .pipe(debounceTime(300), takeUntil(this.destroy$))
+    .subscribe(value => {
       this.store.dispatch(PokemonActions.setSearch({ name: value || '' }));
     });
-    this.filterForm.valueChanges.pipe(debounceTime(200), takeUntil(this.destroy$)).subscribe(v => {
+
+  this.filterForm.valueChanges
+    .pipe(debounceTime(200), takeUntil(this.destroy$))
+    .subscribe(v => {
       this.store.dispatch(PokemonActions.setFilters({
         pokemonType: v.type || '',
         legendary: v.legendary === '' ? null : v.legendary === 'true',
@@ -48,7 +54,7 @@ export class PokemonListComponent implements OnInit, OnDestroy {
         speedMax: v.speedMax ?? null
       }));
     });
-  }
+}
 
   pageChanged(event: any) {
     this.store.dispatch(PokemonActions.changePage({ pageIndex: event.pageIndex, pageSize: event.pageSize }));
